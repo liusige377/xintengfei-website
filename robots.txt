@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://liusige377.github.io/xintengfei-website/sitemap.xml
