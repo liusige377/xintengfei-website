@@ -99,6 +99,7 @@
     <div class="hero-glow1"></div>
     <div class="hero-glow2"></div>
   </div>
+  <div class="hero-wrapper">
   <div class="hero-content">
     <div class="hero-eyebrow">
       <span class="hero-eyebrow-dot"></span>
@@ -120,6 +121,23 @@
       <div class="hero-cert"><span class="hero-cert-icon">📜</span> 危化品经营许可</div>
       <div class="hero-cert"><span class="hero-cert-icon">🚛</span> 道路运输许可</div>
       <div class="hero-cert"><span class="hero-cert-icon">🏆</span> ISO9001认证</div>
+    </div>
+  </div>
+  </div><!-- /hero-wrapper -->
+  <div class="hero-news-panel">
+    <div class="hnp-header">
+      <span class="hnp-dot"></span>
+      <span class="hnp-title">天然气行业动态</span>
+      <span class="hnp-live">LIVE</span>
+    </div>
+    <div class="hnp-list" id="heroNewsList">
+      <div class="hnp-loading">
+        <div class="hnp-spinner"></div>
+        <span>加载中...</span>
+      </div>
+    </div>
+    <div class="hnp-footer">
+      <a href="https://so.toutiao.com/search?keyword=液化天然气" target="_blank" class="hnp-more">查看更多行业资讯 →</a>
     </div>
   </div>
   <div class="scroll-hint">
@@ -414,5 +432,69 @@
 </button>
 
 <script src="js/main.js"></script>
+
+<script>
+// Hero 新闻面板 — 通过多个公开 RSS 代理抓取天然气新闻
+(function(){
+  var el = document.getElementById('heroNewsList');
+  if(!el) return;
+
+  // RSS 源列表（通过 rss2json 代理）
+  var feeds = [
+    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3D%E6%B6%B2%E5%8C%96%E5%A4%A9%E7%84%B6%E6%B0%94%26hl%3Dzh-CN%26gl%3DCN%26ceid%3DCN%3Azh-Hans&count=6',
+    'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fnews.google.com%2Frss%2Fsearch%3Fq%3DLNG%E5%A4%A9%E7%84%B6%E6%B0%94%26hl%3Dzh-CN%26gl%3DCN%26ceid%3DCN%3Azh-Hans&count=6'
+  ];
+
+  function timeAgo(dateStr){
+    var d = new Date(dateStr), now = new Date();
+    var diff = Math.floor((now - d) / 60000);
+    if(diff < 1) return '刚刚';
+    if(diff < 60) return diff + '分钟前';
+    if(diff < 1440) return Math.floor(diff/60) + '小时前';
+    return Math.floor(diff/1440) + '天前';
+  }
+
+  function renderNews(items){
+    if(!items || items.length === 0){
+      el.innerHTML = '<div class="hnp-empty">暂无最新资讯</div>';
+      return;
+    }
+    el.innerHTML = items.slice(0,5).map(function(item, i){
+      return '<a class="hnp-item" href="' + item.link + '" target="_blank" rel="noopener">' +
+        '<div class="hnp-item-num">' + (i+1).toString().padStart(2,'0') + '</div>' +
+        '<div class="hnp-item-body">' +
+          '<div class="hnp-item-title">' + item.title.replace(/<[^>]+>/g,'').substring(0,40) + (item.title.length>40?'…':'') + '</div>' +
+          '<div class="hnp-item-meta">' + (item.source||'行业资讯') + ' · ' + timeAgo(item.pubDate) + '</div>' +
+        '</div>' +
+        '<div class="hnp-item-arrow">›</div>' +
+      '</a>';
+    }).join('');
+  }
+
+  // 尝试第一个源，失败则用第二个
+  fetch(feeds[0])
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if(data.status === 'ok' && data.items && data.items.length > 0){
+        renderNews(data.items);
+      } else {
+        return fetch(feeds[1]).then(function(r){ return r.json(); });
+      }
+    })
+    .then(function(data){
+      if(data && data.status === 'ok') renderNews(data.items);
+    })
+    .catch(function(){
+      // 兜底：显示静态新闻
+      renderNews([
+        {title:'四川天然气价格走势分析：LNG需求持续增长', link:'#', source:'行业资讯', pubDate: new Date().toISOString()},
+        {title:'煤改气政策推进，工业企业用气需求大幅提升', link:'#', source:'能源新闻', pubDate: new Date(Date.now()-3600000).toISOString()},
+        {title:'LNG液化天然气：清洁能源替代传统燃料新趋势', link:'#', source:'清洁能源', pubDate: new Date(Date.now()-7200000).toISOString()},
+        {title:'成都工业园区天然气配套设施建设提速', link:'#', source:'成都新闻', pubDate: new Date(Date.now()-10800000).toISOString()},
+        {title:'气化站建设规范更新，安全标准进一步提升', link:'#', source:'行业标准', pubDate: new Date(Date.now()-14400000).toISOString()}
+      ]);
+    });
+})();
+</script>
 </body>
 </html>
