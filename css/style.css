@@ -584,13 +584,7 @@ footer{background:var(--navy);border-top:1px solid rgba(255,255,255,.04);padding
   cursor: pointer;
 }
 .hnp-item:hover { background: rgba(212,168,67,0.06); }
-.hnp-item-num {
-  font-size: .72rem; font-weight: 800;
-  color: rgba(212,168,67,0.4);
-  min-width: 24px;
-}
-.hnp-item:nth-child(1) .hnp-item-num { color: var(--gold); }
-.hnp-item:nth-child(2) .hnp-item-num { color: rgba(212,168,67,0.7); }
+
 .hnp-item-body { flex: 1; min-width: 0; }
 .hnp-item-title {
   font-size: .84rem; color: rgba(245,240,232,0.88);
