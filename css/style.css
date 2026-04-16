@@ -186,7 +186,7 @@ h1,h2,h3,h4,h5,h6{font-weight:700;line-height:1.25}
 }
 .hero-eyebrow-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 2s ease infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
-.hero-h1{font-size:clamp(3.2rem,7.5vw,6.5rem);font-weight:900;line-height:1.1;color:var(--white);margin:20px 0 36px;letter-spacing:-2px}
+.hero-h1{font-size:clamp(4.5rem,10vw,8.5rem);font-weight:900;line-height:1.05;color:var(--white);margin:20px 0 36px;letter-spacing:-2px}
 .hero-h1 em{color:var(--gold);font-style:normal}
 .hero-desc{font-size:1.12rem;color:rgba(245,240,232,.75);max-width:640px;margin-bottom:52px;line-height:1.9;text-align:center}
 .hero-btns{display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-bottom:0}
